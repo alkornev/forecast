@@ -16,4 +16,7 @@ class Config(object):
     USER_OWM_APIKEY: str = "f90a79d425d1a3a1b4574e3d3282fa86"
     DB_OWN_APIKEY: str = "a974e24678134ed625182468e4a72f63"
     OWM_LINK: str = "http://api.openweathermap.org/data/2.5/weather"
-
+    REDIS_URL: str = os.environ.get('REDIS_URL') or 'redis://'
+    DEBUG: str = True
+    CACHE_TYPE: str = 'SimpleCache'
+    CACHE_DEFAULT_TIMEOUT: str = 60

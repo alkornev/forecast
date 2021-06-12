@@ -30,7 +30,7 @@ class User(UserMixin, db.Model):
         """Check hash of password with the pass hash in User"""
         return check_password_hash(self.password_hash, password)
 
-    def get_reset_password_token(self, expires_in: int=600):
+    def get_reset_password_token(self, expires_in: int = 600):
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
             current_app.config['SECRET_KEY'],
@@ -59,7 +59,7 @@ class User(UserMixin, db.Model):
         return data
 
     def from_dict(self, data, new_user=False):
-        """Given json file add user info into User"""
+        """Given a json file add user info into User"""
         for field in ['username', 'email', 'about_me']:
             if field in data:
                 setattr(self, field, data[field])
@@ -89,3 +89,29 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id: str):
     return User.query.get(int(id))
+
+
+class Weather(db.Model):
+    """ORM Model for Weather db"""
+    # TODO: Change variable names C and F
+    id = db.Column(db.Integer, primary_key=True)
+    cityname = db.Column(db.String(64), index=True)
+    datetime = db.Column(db.DateTime, index=True, unique=True, default=datetime.utcnow)
+    C = db.Column(db.Float, index=True)
+    F = db.Column(db.Float, index=True)
+
+    def from_dict(self, data):
+        """Serialize json"""
+        for field in ['cityname', 'datetime', 'C', 'F']:
+            if field in data:
+                setattr(self, field, data[field])
+
+    def to_dict(self) -> dict:
+        """Returns json file"""
+        data = {
+            'cityname': self.cityname,
+            'datetime': self.datetime,
+            'C': self.C,
+            'F': self.F
+        }
+        return data

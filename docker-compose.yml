@@ -1,0 +1,20 @@
+version: '3'
+services:
+  web:
+    image: forecast:latest
+    ports:
+      - 8000:5000
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      REDIS_HOST: "redis"
+      DB_HOST: "mysql"
+  redis:
+    image: redis:alpine
+  mysql:
+    image: mysql/mysql-server:5.7
+    volumes:
+      - mysql-data:/var/lib/mysql
+volumes:
+  mysql-data: {}

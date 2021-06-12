@@ -10,28 +10,10 @@ To run forecast image standalone:
 ```bash
 docker run --name forecast -d -p 8000:5000 --rm forecast:latest
 ```
-Create mysql container:
+Run containers:
 ```bash
-docker run --name mysql -d -e MYSQL_RANDOM_ROOT_PASSWORD=yes \
-    -e MYSQL_DATABASE=forecast -e MYSQL_USER=forecast \
-    -e MYSQL_PASSWORD=password \
-    mysql/mysql-server:5.7
+docker-compose up
 ```
-
-Start mysql container:
-```bash
-docker start mysql
-```
-
-To run forecast image:
-```bash
-docker run --name forecast -d -p 8000:5000 --rm -e SECRET_KEY=my-secret-key \
-    --link mysql:dbserver \
-    -e DATABASE_URL=mysql+pymysql://forecast:password@dbserver/forecast \
-    forecast:latest
-```
-
-
 
 ## Usage example
 
