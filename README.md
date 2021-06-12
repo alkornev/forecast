@@ -33,3 +33,5 @@ For Fahrenheit consider to use F in the unit parameter.
 ```bash
 http GET "localhost:8000/api/weather?cityname=Moscow&unit=C" "Authorization:Bearer <your token>"
 ```
+
+## PS: Token expired
