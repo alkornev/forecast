@@ -1,23 +1,39 @@
-from app import create_app
+from rq import get_current_job
+from app import create_app, db
+from app.models import Cities
+from app.api.weather import WeatherApiError, WeatherApiClient
+import time
+
 
 app = create_app()
 app.app_context().push()
 
-# TODO: rewrite from scratch
 
-'''
-def get_weather_in_most_populated_cities():
-    with open("cities", "r") as citynames:
-        content = citynames.read().splitlines()
-    res = []
-    for j, city in enumerate(content):
-        try:
-            print(j, city)
-            response_json = WeatherApiClient.get_weather(city, 'F')
-            print(response_json)
-        except:
-            print('Error')
-            pass
+def background_job():
+    """Background job"""
+    cities = Cities()
+    try:
+        for entry in cities.query.all():
+            if not entry.fetched:
+                entry.fetched = True
+                db.session.commit()
+                weather = WeatherApiClient.\
+                    get_weather(entry.cityname, to_db=True)
+        cities.query.update({'fetched': False})
+        db.session.commit()
+    except WeatherApiError as err:
+        # wait 1 minute until weather api limitation will be expired
+        time.sleep(60)
+        print('Waiting API...')
+    except Exception as err:
+        print("db related problem")
 
-background_task()
-'''
+    print('Task completed!')
+    print(" I'm going to sleep...")
+    time.sleep(70)
+
+
+app.task_queue.enqueue(background_job)
+
+
+

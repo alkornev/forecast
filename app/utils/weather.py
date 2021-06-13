@@ -22,8 +22,8 @@ class WeatherApiClient:
         return round(9 / 5 * celsius + 32, 2)
 
     @classmethod
-    def get_weather(cls, cityname: str) -> dict:
-        """Return weather from OWA, first search in db then makes request"""
+    def get_weather(cls, cityname: str, to_db: bool = True) -> dict:
+        """Return weather from OWA, first search in db, then makes request"""
         try:
             weather = Weather()
             # check if there is any record in db in last minute
@@ -42,9 +42,12 @@ class WeatherApiClient:
                       'datetime': datetime.utcnow(),
                       'C': data['main']['temp'],
                       'F': cls.to_fahr(data['main']['temp'])}
-            weather.from_dict(result)
-            db.session.add(weather)
-            db.session.commit()
+            if to_db:
+                weather.from_dict(result)
+                db.session.add(weather)
+                db.session.commit()
             return result
         except requests.HTTPError as err:
             raise WeatherApiError('call to OWA failed') from err
+
+

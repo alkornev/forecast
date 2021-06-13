@@ -115,3 +115,24 @@ class Weather(db.Model):
             'F': self.F
         }
         return data
+
+
+class Cities(db.Model):
+    """ORM Model for Weather db"""
+    # TODO: Change variable names C and F
+    id = db.Column(db.Integer, primary_key=True)
+    cityname = db.Column(db.String(64), unique=True)
+    fetched = db.Column(db.Boolean, default=False)
+    def from_dict(self, data):
+        """Serialize json"""
+        for field in ['cityname', 'fetched']:
+            if field in data:
+                setattr(self, field, data[field])
+
+    def to_dict(self) -> dict:
+        """Returns json file"""
+        data = {
+            'cityname': self.cityname,
+            'fetched': self.fetched
+        }
+        return data

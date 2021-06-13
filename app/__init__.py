@@ -11,11 +11,9 @@ import rq
 from config import Config
 
 
-db: SQLAlchemy = SQLAlchemy()
+db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
-login.login_view = 'auth.login'
-login.login_message = 'Please log in to access this page.'
 
 CACHE_CONFIG = {
     'DEBUG': True,
@@ -35,7 +33,7 @@ def create_app(config_class=Config) -> Flask:
     login.init_app(app)
     cache.init_app(app)
     app.redis = Redis.from_url(app.config['REDIS_URL'])
-    app.task_queue = rq.Queue('forecast-tasks', connection=app.redis)
+    app.task_queue = rq.Queue('forecast', connection=app.redis)
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
@@ -46,10 +44,13 @@ def create_app(config_class=Config) -> Flask:
     from app.utils import bp as utils_bp
     app.register_blueprint(utils_bp)
 
+    from app.statistics import bp as stats_bp
+    app.register_blueprint(stats_bp)
+
     if not app.debug and not app.testing:
         if not os.path.exists('logs'):
             os.mkdir('logs')
-        file_handler = RotatingFileHandler('logs/microblog.log',
+        file_handler = RotatingFileHandler('logs/forecast.log',
                                            maxBytes=10240, backupCount=10)
         file_handler.setFormatter(logging.Formatter(
             '%(asctime)s %(levelname)s: %(message)s '
@@ -58,7 +59,7 @@ def create_app(config_class=Config) -> Flask:
         app.logger.addHandler(file_handler)
 
         app.logger.setLevel(logging.INFO)
-        app.logger.info('Microblog startup')
+        app.logger.info('Forecast startup')
     return app
 
 

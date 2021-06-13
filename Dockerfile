@@ -6,14 +6,17 @@ WORKDIR /home/forecast
 
 COPY requirements.txt requirements.txt
 RUN python -m venv venv
-RUN apk add --no-cache gcc g++ musl-dev python3-dev libffi-dev openssl-dev cargo
+RUN apk add --no-cache nano gcc g++ musl-dev python3-dev libffi-dev openssl-dev cargo
 RUN venv/bin/pip install -r requirements.txt
 RUN venv/bin/pip install pymysql
 
 COPY app app
 COPY migrations migrations
-COPY forecast.py config.py boot.sh ./
+COPY most_populated.txt most_populated.txt
+COPY forecast.py config.py boot.sh run_scheduler.sh ./
 RUN chmod +x boot.sh
+RUN chmod +x run_scheduler.sh
+
 
 ENV FLASK_APP forecast.py
 

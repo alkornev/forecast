@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
   web:
     image: forecast:latest
@@ -8,10 +8,24 @@ services:
       - mysql
       - redis
     environment:
-      REDIS_HOST: "redis"
       DB_HOST: "mysql"
+      REDIS_URL: "redis://redis"
+      REDIS_HOST: "redis"
+  scheduler:
+    image: forecast:latest
+    entrypoint: "/bin/sh ./run_scheduler.sh"
+    depends_on:
+      - mysql
+      - redis
+    command: export FLASK_APP=./app/tasks.py
+    environment:
+      DB_HOST: "mysql"
+      REDIS_URL: "redis://redis"
+      REDIS_HOST: "redis"
   redis:
     image: redis:alpine
+    ports:
+      - 6379:6379
   mysql:
     image: mysql/mysql-server:5.7
     volumes:
