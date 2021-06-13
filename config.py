@@ -18,5 +18,5 @@ class Config(object):
     OWM_LINK: str = "http://api.openweathermap.org/data/2.5/weather"
     REDIS_URL: str = os.environ.get('REDIS_URL') or 'redis://'
     DEBUG: str = True
-    CACHE_TYPE: str = 'SimpleCache'
+    CACHE_TYPE: str = 'redis'
     CACHE_DEFAULT_TIMEOUT: str = 60

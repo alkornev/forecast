@@ -2,7 +2,7 @@ from flask import jsonify, Response
 from werkzeug.http import HTTP_STATUS_CODES
 
 
-def error_response(status_code: int, message=None) -> Response:
+def error_response(status_code: int, message: str = None) -> Response:
     """returns error status with message """
     payload = {'error': HTTP_STATUS_CODES.get(status_code, 'Unknown error')}
     if message:
@@ -12,6 +12,6 @@ def error_response(status_code: int, message=None) -> Response:
     return response
 
 
-def bad_request(message):
+def bad_request(message: str) -> Response:
     """returns 400 error code"""
     return error_response(400, message)

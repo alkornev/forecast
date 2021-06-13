@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, Response
 from app import db
 from app.api import bp
 from app.api.auth import basic_auth, token_auth
@@ -6,7 +6,7 @@ from app.api.auth import basic_auth, token_auth
 
 @bp.route('/tokens', methods=['POST'])
 @basic_auth.login_required
-def get_token():
+def get_token() -> Response:
     """Return a JSON-file with token"""
     token = basic_auth.current_user().get_token()
     db.session.commit()
@@ -15,7 +15,7 @@ def get_token():
 
 @bp.route('/tokens', methods=['DELETE'])
 @token_auth.login_required
-def revoke_token() -> tuple:
+def revoke_token():
     """Revoke token for user"""
     token_auth.current_user().revoke_token()
     db.session.commit()

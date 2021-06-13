@@ -14,13 +14,7 @@ from config import Config
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
-
-CACHE_CONFIG = {
-    'DEBUG': True,
-    'CACHE_TYPE': 'SimpleCache',
-    'CACHE_DEFAULT_TIMEOUT': 60
-}
-cache = Cache(config=CACHE_CONFIG)
+cache = Cache()
 
 
 def create_app(config_class=Config) -> Flask:
@@ -44,7 +38,7 @@ def create_app(config_class=Config) -> Flask:
     from app.utils import bp as utils_bp
     app.register_blueprint(utils_bp)
 
-    from app.statistics import bp as stats_bp
+    from app.stats import bp as stats_bp
     app.register_blueprint(stats_bp)
 
     if not app.debug and not app.testing:
@@ -61,6 +55,5 @@ def create_app(config_class=Config) -> Flask:
         app.logger.setLevel(logging.INFO)
         app.logger.info('Forecast startup')
     return app
-
 
 from app import models, utils
