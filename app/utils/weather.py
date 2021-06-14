@@ -43,11 +43,16 @@ class WeatherApiClient:
                       'C': data['main']['temp'],
                       'F': cls.to_fahr(data['main']['temp'])}
             if to_db:
-                weather.from_dict(result)
-                db.session.add(weather)
-                db.session.commit()
+                cls.save_to_db(result)
             return result
         except requests.HTTPError as err:
             raise WeatherApiError('call to OWA failed') from err
+
+    @staticmethod
+    def save_to_db(weather_dict: dict):
+        weather = Weather()
+        weather.from_dict(weather_dict)
+        db.session.add(weather)
+        db.session.commit()
 
 

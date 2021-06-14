@@ -1,42 +1,25 @@
-from rq import get_current_job
-from flask import request
 from app import create_app, db
-from app.models import Cities
-from app.api.weather import WeatherApiError, WeatherApiClient
-import time
-
-
-app = create_app()
-app.app_context().push()
-
+from app.models import Cities, Weather
+from app.api.weather import WeatherApiClient, WeatherApiError
+from sqlalchemy import exc
 
 def background_job():
     """Background job"""
-    cities = Cities()
+    app = create_app()
+    app.app_context().push()
     try:
+        cities = Cities()
         for entry in cities.query.all():
             if not entry.fetched:
                 entry.fetched = True
                 db.session.commit()
                 weather = WeatherApiClient.\
-                    get_weather(entry.cityname, to_db=True)
+                    get_weather(entry.cityname, False)
+                WeatherApiClient.save_to_db(weather)
         cities.query.update({'fetched': False})
         db.session.commit()
+    except exc.SQLAlchemyError as err:
+        print(err)
     except WeatherApiError as err:
-        # wait 1 minute until weather api limitation will be expired
-        time.sleep(60)
-        print('Waiting API...')
-        app.task_queue.empty()
-        app.task_queue.enqueue(background_job)
-    except Exception as err:
-        print("db related problem")
-        app.task_queue.empty()
-
-    print('Task completed!')
-    raise RuntimeError('Server going down')
-
-
-app.task_queue.enqueue(background_job)
-
-
+        print(err)
 

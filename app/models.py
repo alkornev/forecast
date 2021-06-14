@@ -123,6 +123,7 @@ class Cities(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cityname = db.Column(db.String(64), unique=True)
     fetched = db.Column(db.Boolean, default=False)
+
     def from_dict(self, data):
         """Serialize json"""
         for field in ['cityname', 'fetched']:

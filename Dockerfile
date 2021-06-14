@@ -13,9 +13,9 @@ RUN venv/bin/pip install pymysql
 COPY app app
 COPY migrations migrations
 COPY most_populated.txt most_populated.txt
-COPY forecast.py config.py boot.sh run_scheduler.sh ./
-RUN chmod +x boot.sh
-RUN chmod +x run_scheduler.sh
+COPY forecast.py config.py boot.sh run_scheduler.sh rq_process.py ./
+RUN chmod a+x boot.sh
+RUN chmod a+x run_scheduler.sh
 
 
 ENV FLASK_APP forecast.py

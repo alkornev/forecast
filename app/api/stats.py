@@ -24,8 +24,7 @@ def get_csv() -> Response:
     csv_data = io.StringIO()
     writer = csv.DictWriter(csv_data, ['cityname', 'datetime', 'C', 'F'])
     writer.writeheader()
-    for item in Weather.query.filter(start <= Weather.datetime,
-                                     Weather.datetime <= end).all():
+    for item in Weather.query.filter().all():
         writer.writerow(item.to_dict())
     response = Response(csv_data.getvalue())
     response.code = 200
