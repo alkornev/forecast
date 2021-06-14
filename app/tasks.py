@@ -1,10 +1,11 @@
 from app import create_app, db
-from app.models import Cities, Weather
+from app.models import Cities
 from app.api.weather import WeatherApiClient, WeatherApiError
 from sqlalchemy import exc
 
+
 def background_job():
-    """Background job"""
+    """Background job."""
     app = create_app()
     app.app_context().push()
     try:
@@ -22,4 +23,3 @@ def background_job():
         print(err)
     except WeatherApiError as err:
         print(err)
-

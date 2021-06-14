@@ -7,7 +7,7 @@ from app.api.auth import basic_auth, token_auth
 @bp.route('/tokens', methods=['POST'])
 @basic_auth.login_required
 def get_token() -> Response:
-    """Return a JSON-file with token"""
+    """Return a JSON-file with token."""
     token = basic_auth.current_user().get_token()
     db.session.commit()
     return jsonify({'token': token})
@@ -16,7 +16,7 @@ def get_token() -> Response:
 @bp.route('/tokens', methods=['DELETE'])
 @token_auth.login_required
 def revoke_token():
-    """Revoke token for user"""
+    """Revoke token for user."""
     token_auth.current_user().revoke_token()
     db.session.commit()
     return '', 204

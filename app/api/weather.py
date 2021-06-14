@@ -9,7 +9,7 @@ from app.utils.forms import WeatherForm
 @bp.route('/weather', methods=['GET'])
 @token_auth.login_required
 def get_weather() -> Response:
-    """Requests temperature in a given city in Celsius or Fahrenheit"""
+    """Request temperature in a given city in Celsius or Fahrenheits."""
     form = WeatherForm(request.args, meta={'csrf': False})
     if form.validate():
         try:

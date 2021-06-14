@@ -18,7 +18,7 @@ cache = Cache()
 
 
 def create_app(config_class=Config) -> Flask:
-    """Factory function for creating application"""
+    """Factory function for creating application."""
     app = Flask(__name__)
     app.config.from_object(config_class)
 

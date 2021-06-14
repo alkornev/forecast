@@ -6,13 +6,12 @@ from app.api import bp
 from app.models import Weather
 from app.stats.forms import PeriodForm
 from app.api.errors import bad_request
-from datetime import datetime, date
 
 
 @bp.route('/stats', methods=['GET'])
 @token_auth.login_required
 def get_csv() -> Response:
-    """Saves statistics in csv file"""
+    """Save statistics in csv file."""
     form = PeriodForm(request.args, meta={'csrf': False})
 
     if not form.validate():
@@ -24,7 +23,8 @@ def get_csv() -> Response:
     csv_data = io.StringIO()
     writer = csv.DictWriter(csv_data, ['cityname', 'datetime', 'C', 'F'])
     writer.writeheader()
-    for item in Weather.query.filter().all():
+    for item in Weather.query.filter(start <= Weather.datetime,
+                                     Weather.datetime <= end).all():
         writer.writerow(item.to_dict())
     response = Response(csv_data.getvalue())
     response.code = 200

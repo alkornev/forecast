@@ -3,29 +3,28 @@ from datetime import datetime, timedelta
 from app.models import Weather
 from app import db
 
-UNITS = {'F': 'imperial', 'C': 'metric'}
-
 
 class WeatherApiError(Exception):
-    """Base class for weather api http request exceptions"""
+    """Base class for weather api http request exceptions."""
+
     pass
 
 
 class WeatherApiClient:
-    """Base class for weather api http requests"""
+    """Base class for weather api http requests."""
+
     API_KEY: str = "f90a79d425d1a3a1b4574e3d3282fa86"
     OWA_URL: str = "http://api.openweathermap.org/data/2.5/weather"
 
     @staticmethod
     def to_fahr(celsius: float):
-        """Converts celsius to fahrenheit degrees"""
+        """Convert celsius to fahrenheit degrees."""
         return round(9 / 5 * celsius + 32, 2)
 
     @classmethod
     def get_weather(cls, cityname: str, to_db: bool = True) -> dict:
-        """Return weather from OWA, first search in db, then makes request"""
+        """Return weather from OWA, first search in db, then makes request."""
         try:
-            weather = Weather()
             # check if there is any record in db in last minute
             cached = Weather.query.filter(Weather.cityname == cityname,
                                           Weather.datetime >=
@@ -50,9 +49,8 @@ class WeatherApiClient:
 
     @staticmethod
     def save_to_db(weather_dict: dict):
+        """Save dict file to database."""
         weather = Weather()
         weather.from_dict(weather_dict)
         db.session.add(weather)
         db.session.commit()
-
-

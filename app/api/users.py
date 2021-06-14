@@ -10,14 +10,14 @@ from app import cache
 @bp.route('/users/<int:id>', methods=['GET'])
 @token_auth.login_required
 @cache.cached(timeout=60)
-def get_user(id) -> Response:
-    """Get user json file by id"""
+def get_user(id: int) -> Response:
+    """Get user json file by id."""
     return jsonify(User.query.get_or_404(id).to_dict())
 
 
 @bp.route('/users', methods=['POST'])
 def create_user() -> Response:
-    """Create new user"""
+    """Create new user."""
     data = request.get_json() or {}
     if 'username' not in data or 'email' not in data or 'password' not in data:
         return bad_request('must include username, email and password fields')
