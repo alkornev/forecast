@@ -36,7 +36,7 @@ http GET "localhost:8000/api/weather?cityname=Moscow&unit=C" "Authorization:Bear
 
 Get report from database for given period of time startdate:endate in format %Y-%m-%d %H:%M:%S':
 ```bash
-http GET "localhost:8000/api/stats?startdate=&enddate=" "Authorization:Bearer <your token>"
+http GET "localhost:8000/api/stats?startdate=Y-%m-%d %H:%M:%S&enddate=Y-%m-%d %H:%M:%S" "Authorization:Bearer <your token>"
 ```
 
 ## PS: Token expired
