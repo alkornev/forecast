@@ -34,7 +34,7 @@ For Fahrenheit consider to use F in the unit parameter.
 http GET "localhost:8000/api/weather?cityname=Moscow&unit=C" "Authorization:Bearer <your token>"
 ```
 
-Get report from database for given period of time startdate:endate in format %Y-%m-%d %H:%M:%S':
+Get report from database for a given period of time startdate:endate in format %Y-%m-%d %H:%M:%S':
 ```bash
 http GET "localhost:8000/api/stats?startdate=Y-%m-%d %H:%M:%S&enddate=Y-%m-%d %H:%M:%S" "Authorization:Bearer <your token>"
 ```
